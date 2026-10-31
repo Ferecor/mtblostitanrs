@@ -1,2 +1,0 @@
-# mtblostitanrs
-club de montanbike
