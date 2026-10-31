@@ -29,6 +29,13 @@ if (!adminApp) {
     })
     console.log('✅ Firebase Admin SDK inicializado con clave de cuenta de servicio')
   } else {
+    if (process.env.NODE_ENV === 'production') {
+      throw new Error(
+        `No se encontró el archivo de clave de cuenta de servicio en ${serviceAccountPath}. ` +
+        'Configura GOOGLE_APPLICATION_CREDENTIALS como archivo secreto en el servicio.'
+      )
+    }
+
     console.warn('⚠️ No se encontró el archivo de clave de cuenta de servicio en:', serviceAccountPath)
     adminApp = initializeApp({
       projectId: process.env.FIREBASE_PROJECT_ID || 'mtb-lostitanes',

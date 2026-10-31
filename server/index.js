@@ -69,11 +69,23 @@ app.use('/api/admin/rutas', adminRutasRouter)
 app.use('/api/rutas', rutasRouter)
 
 // Healthcheck y diagnóstico
-app.get('/api/health', (req, res) => {
-  res.json({
+app.get('/api/health', async (req, res) => {
+  try {
+    await adminDb.collection('citas').limit(1).get()
+  } catch (error) {
+    console.error('❌ Firebase Admin no puede consultar Firestore:', error.message)
+    return res.status(503).json({
+      status: 'error',
+      mensaje: 'Firebase Admin no puede acceder a Firestore',
+      firebaseAdminConectado: false,
+      timestamp: new Date().toISOString(),
+    })
+  }
+
+  return res.json({
     status: 'ok',
     mensaje: 'Servidor Backend de MTB Los Titanes en ejecución',
-    firebaseAdminConectado: Boolean(adminDb),
+    firebaseAdminConectado: true,
     timestamp: new Date().toISOString(),
   })
 })

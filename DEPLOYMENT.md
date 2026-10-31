@@ -13,6 +13,8 @@ Render. La API necesita Firebase Admin para Firestore y Firebase Authentication.
    `firebase-admin.json` con la clave JSON de una cuenta de servicio dedicada.
    Render monta los archivos secretos bajo `/etc/secrets`; configura
    `GOOGLE_APPLICATION_CREDENTIALS=/etc/secrets/firebase-admin.json`.
+   En producción, el servidor no arranca si falta este archivo; `/api/health`
+   también comprueba que Firebase Admin pueda consultar Firestore.
 3. Usa una cuenta de servicio con los permisos mínimos necesarios para
    Firestore y para consultar usuarios en Firebase Authentication. No reutilices
    ni publiques claves en el repositorio. Revoca y rota cualquier clave que se
