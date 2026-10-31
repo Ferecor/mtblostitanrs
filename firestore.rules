@@ -1,0 +1,54 @@
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ─── Función helper para verificar rol de Administrador ─────────────────
+    function isAdmin() {
+      return request.auth != null
+        && request.auth.token.email_verified == true
+        && request.auth.token.email in [
+          "admin@mtbtinanes.com",
+          "taller@mtbtinanes.com",
+          "ferecorweb@gmail.com",
+          "mtblostitanes@gmail.com"
+        ];
+    }
+
+    // ─── Citas del Taller ────────────────────────────────────────────────────
+    // El propietario puede gestionar su propia cita.
+    // Los administradores tienen acceso completo para gestionar todas las citas.
+    match /citas/{citaId} {
+      allow read, update, delete: if request.auth != null
+        && (request.auth.uid == resource.data.userId || isAdmin());
+      allow create: if request.auth != null
+        && (request.resource.data.userId == request.auth.uid || isAdmin());
+    }
+
+    // ─── Rutas de Salida ─────────────────────────────────────────────────────
+    // Lectura pública. Solo usuarios autenticados pueden "unirse" (update).
+    match /rutas/{rutaId} {
+      allow read: if true;
+      // Los miembros pueden apuntarse; los administradores gestionan las rutas.
+      allow update: if isAdmin()
+        || (request.auth != null
+          && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['asistentes']));
+      allow create, delete: if isAdmin();
+    }
+
+    // ─── Galería ─────────────────────────────────────────────────────────────
+    match /galeria/{fotoId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    // ─── Perfil de Usuario ───────────────────────────────────────────────────
+    match /usuarios/{userId} {
+      allow read:  if request.auth != null && request.auth.uid == userId;
+      allow create, update: if request.auth != null
+        && request.auth.uid == userId
+        && (!('rol' in request.resource.data) || request.resource.data.rol != 'admin');
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+  }
+}

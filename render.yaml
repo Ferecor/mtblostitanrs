@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: mtb-tinanes-api
+    runtime: node
+    region: frankfurt
+    buildCommand: npm ci --omit=dev
+    startCommand: npm run server
+    healthCheckPath: /api/health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 22
+      - key: FIREBASE_PROJECT_ID
+        value: mtb-lostitanes
+      - key: CORS_ORIGINS
+        value: https://mtblostitanes.netlify.app
+      - key: GOOGLE_APPLICATION_CREDENTIALS
+        sync: false

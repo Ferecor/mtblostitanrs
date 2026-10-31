@@ -1,0 +1,69 @@
+/* index.css — Estilos globales MTB Tinanes */
+
+/* ── Directivas Tailwind ──────────────────────────────────────────────────── */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ── Base ─────────────────────────────────────────────────────────────────── */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply font-sans text-dark bg-white;
+    margin: 0;
+    padding: 0;
+  }
+
+  /* Selección de texto con el color de acento */
+  ::selection {
+    background-color: #FF5722;
+    color: white;
+  }
+
+  /* Scrollbar minimalista (Chrome/Safari) */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #F5F5F5;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #BDBDBD;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #FF5722;
+  }
+
+  /* Inputs: eliminar estilos por defecto en Safari */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    opacity: 0.5;
+    cursor: pointer;
+  }
+}
+
+/* ── Utilidades custom ────────────────────────────────────────────────────── */
+@layer utilities {
+  /* Corte de texto en múltiples líneas */
+  .line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Evitar que columnas CSS corten elementos a la mitad (galería masonry) */
+  .break-inside-avoid {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+}
