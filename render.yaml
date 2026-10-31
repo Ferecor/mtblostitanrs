@@ -2,6 +2,7 @@ services:
   - type: web
     name: mtb-tinanes-api
     runtime: node
+    plan: free
     region: frankfurt
     buildCommand: npm ci --omit=dev
     startCommand: npm run server
